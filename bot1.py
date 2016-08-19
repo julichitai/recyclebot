@@ -17,7 +17,6 @@ class UserInfo:
 bot=telebot.TeleBot(config.token)
 us=UserInfo()
 
-#менюшка с выбором отходов
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     us.item=''
@@ -47,7 +46,6 @@ def handle_start(message):
 def handler_help(message):
 	bot.send_message(message.chat.id, "Этот бот поможет тебе найти ближайший пункт раздельного сбора отходов\n\nнабери /start для начала работы с ботом\n")
 
-#обработка нажатий менюшки
 @bot.callback_query_handler(func=lambda call: True)
 def callback(call):
 	if call.message:
@@ -63,16 +61,13 @@ def callback(call):
 			i+=1
 		
 
-#функция получения геолокации
 def send(message):
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True,resize_keyboard=True)
     kb=types.InlineKeyboardMarkup()
     btn = types.KeyboardButton('Отправить мое местоположение', request_location=True)
     markup.add(btn)
     bot.send_message(message.chat.id, 'Отправьте мне свое местоположение', reply_markup=markup)    
-    #bot.register_next_step_handler(call.message, ok)
-
-#хэндлер для текста
+    
 @bot.message_handler(func=lambda message: True, content_types=["text"])
 def handler_city(message):
     if message.text=="Закончить выбор":
@@ -85,7 +80,6 @@ def handler_city(message):
             geo(message)
         i+=1
 				
-#хэндлер для местоположения
 @bot.message_handler(content_types=['location'])
 def handle_location(message):
 	us.set_user_loc(message.location)
@@ -93,7 +87,6 @@ def handle_location(message):
 	print('широта', us.user_location.latitude)
 	define_location(message,us.user_location)
 
-#определение города, сравнение со значениями из конфига
 def define_location(message,loc):
 	i=0
 	while i<31:
@@ -103,18 +96,12 @@ def define_location(message,loc):
 				break;
 		i+=1
 	
-	print("RESULT")
-	print(us.city_id)
-	print(us.user_location)
-	print(us.item)
 	geo(message)
 
-#функция для сверки с БД
 def geo(message):	
     con = sqlite3.connect('users.db')
     cur = con.cursor()
     cur.execute('SELECT * FROM users')
-    #print(cur.fetchall())
     cur.execute('SELECT * FROM users')
     index=[]
     result=[]
@@ -165,7 +152,6 @@ def geo(message):
         bot.send_message(message.chat.id, "Начать поиск сначала?", reply_markup=keyboard)
         
 		
-#функция вывода ближайших пунктов			
 def printfind(msg,ind):
     con = sqlite3.connect('users.db')
     cur = con.cursor()
