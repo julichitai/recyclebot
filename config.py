@@ -1,6 +1,6 @@
 from telebot import types
 
-token = '249154043:AAHNGRk1UgHAIS1ZNGmzNeV5v_8e88T9ICo'
+token = 'YOUR TOKEN'
 
 locationMSK=types.Location(37.6168444863, 55.7580321449)
 locationSPB=types.Location(30.302746582, 59.9353923257)
